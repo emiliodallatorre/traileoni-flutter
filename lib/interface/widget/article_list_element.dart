@@ -36,15 +36,23 @@ class ArticleListElement extends StatelessWidget {
                       )
                     : Container(),
               ),
-              ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: article.categories.length,
-                  // scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) => Chip(
-                        label: Text(article.categories.elementAt(index).name),
-                        backgroundColor: Theme.of(context).primaryColor,
-                      )),
+              Center(
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  children: article.categories
+                      .map((category) => Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                            child: Text(
+                              category.name.toUpperCase(),
+                              style: Theme.of(context).textTheme.headline6.copyWith(
+                                    decoration: TextDecoration.underline,
+                                    color: Colors.orange,
+                                  ),
+                            ),
+                          ))
+                      .toList(),
+                ),
+              ),
             ],
           ),
           Text(article.title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline5),
