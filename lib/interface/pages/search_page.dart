@@ -44,7 +44,7 @@ class _SearchPageState extends State<SearchPage> {
 
     return WillPopScope(
       onWillPop: () {
-        if (widget.focusNode.hasFocus) {
+        if (widget.focusNode.hasFocus || state != SearchState.INACTIVE) {
           searchBloc.search("");
           _searchController.clear();
           setState(() => state = SearchState.INACTIVE);
