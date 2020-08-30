@@ -79,6 +79,7 @@ class ArticleListElement extends StatelessWidget {
           ),
           Text(article.title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline5),
           Text(article.excerpt),
+          article.author?.isEmpty ?? true ? Container() : Text(article.author),
           article.featuredMediaUrl == null || !showImage
               ? Container()
               : Column(

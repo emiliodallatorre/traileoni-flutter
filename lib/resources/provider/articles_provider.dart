@@ -17,7 +17,7 @@ class ArticlesProvider {
         order: Order.desc,
         orderBy: PostOrderBy.date,
       ),
-      // fetchAuthor: true,
+      fetchAuthor: full ?? true,
       fetchFeaturedMedia: full ?? true,
       // fetchComments: true,
       fetchCategories: full ?? true,
