@@ -57,9 +57,9 @@ class ArticleListElement extends StatelessWidget {
                 alignment: AlignmentDirectional.topEnd,
                 child: preferences.savedPosts.contains(article.id)
                     ? Padding(
-                  padding: EdgeInsets.only(top: 16.0),
-                  child: Icon(Icons.bookmark, color: Colors.redAccent),
-                )
+                        padding: EdgeInsets.only(top: 16.0),
+                        child: Icon(Icons.bookmark, color: Colors.redAccent),
+                      )
                     : Container(),
               ),
               Align(
@@ -70,9 +70,9 @@ class ArticleListElement extends StatelessWidget {
                   children: article.categories == null
                       ? waitingShimmer
                       : article.categories.map((CategoryModel category) {
-                    if (article.categories.indexOf(category) < 3) return Chip(label: Text(category.name));
-                    return Container();
-                  }).toList(),
+                          if (article.categories.indexOf(category) < 3) return Chip(label: Text(category.name));
+                          return Container();
+                        }).toList(),
                 ),
               ),
             ],
@@ -82,26 +82,26 @@ class ArticleListElement extends StatelessWidget {
           article.featuredMediaUrl == null || !showImage
               ? Container()
               : Column(
-            children: <Widget>[
-              AspectRatio(
-                aspectRatio: 7 / 5,
-                child: CachedNetworkImage(
-                  imageUrl: article.featuredMediaUrl,
-                  fit: BoxFit.cover,
-                  placeholder: (BuildContext context, String imageUrl) => Center(child: CircularProgressIndicator()),
+                  children: <Widget>[
+                    AspectRatio(
+                      aspectRatio: 7 / 5,
+                      child: CachedNetworkImage(
+                        imageUrl: article.featuredMediaUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (BuildContext context, String imageUrl) => Center(child: CircularProgressIndicator()),
+                      ),
+                    ),
+                    article.featuredMediaCaption.isEmpty
+                        ? Container()
+                        : Align(
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 4.0, top: 4.0),
+                              child: Text(article.featuredMediaCaption, style: Theme.of(context).textTheme.caption),
+                            ),
+                          ),
+                  ],
                 ),
-              ),
-              article.featuredMediaCaption.isEmpty
-                  ? Container()
-                  : Align(
-                alignment: AlignmentDirectional.centerEnd,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 4.0, top: 4.0),
-                  child: Text(article.featuredMediaCaption, style: Theme.of(context).textTheme.caption),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
       onTap: () =>
