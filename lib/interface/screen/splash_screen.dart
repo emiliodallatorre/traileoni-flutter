@@ -7,9 +7,8 @@ import 'package:flutter/material.dart';
 class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    currentStateBloc.initialize();
     settingsBloc.initialize(context);
-    Future.delayed(Duration(seconds: 8)).then((onTimer) => Navigator.of(context).pushReplacementNamed(HomeScreen.route));
+    currentStateBloc.initialize().then((onArticles) => Navigator.of(context).pushReplacementNamed(HomeScreen.route, arguments: onArticles));
 
     return Scaffold(
       // backgroundColor: Colors.orange,

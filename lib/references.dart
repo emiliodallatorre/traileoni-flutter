@@ -11,5 +11,5 @@ class References {
 
   static WordPress wordPress = WordPress(baseUrl: "https://www.traileoni.it/");
 
-  static int articlesPerPage = 20;
+  static int articlesPerPage = 10;
 }

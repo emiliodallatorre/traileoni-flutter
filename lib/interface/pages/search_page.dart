@@ -1,4 +1,5 @@
 import 'package:app/bloc/categories_bloc.dart';
+import 'package:app/bloc/currentstate_bloc.dart';
 import 'package:app/bloc/search_bloc.dart';
 import 'package:app/generated/i18n.dart';
 import 'package:app/interface/widget/article_list_element_collapsed.dart';
@@ -21,7 +22,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final CurrentStateModel currentState;
+  CurrentStateModel currentState;
 
   _SearchPageState({@required this.currentState});
 
@@ -39,37 +40,53 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: <Widget>[
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(labelText: S.of(context).insertTextToSearch),
-                controller: _searchController,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.search,
-                onSubmitted: (String query) {
-                  searchBloc.search(query);
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  setState(() => state = SearchState.SEARCHING);
-                },
-                focusNode: widget.focusNode,
+    currentStateBloc.currentState.listen((onStateUpdate) => setState(() => currentState = onStateUpdate));
+
+    return WillPopScope(
+      onWillPop: () {
+        if (widget.focusNode.hasFocus) {
+          searchBloc.search("");
+          _searchController.clear();
+          setState(() => state = SearchState.INACTIVE);
+          FocusScope.of(context).requestFocus(FocusNode());
+
+          return Future.value(false);
+        } else {
+          return Future.value(true);
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: <Widget>[
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(labelText: S.of(context).insertTextToSearch, border: InputBorder.none),
+                  controller: _searchController,
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (String query) {
+                    searchBloc.search(query);
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    setState(() => state = SearchState.SEARCHING);
+                  },
+                  focusNode: widget.focusNode,
+                ),
               ),
-            ),
-            IconButton(
-              icon: Icon(Icons.backspace, color: Theme.of(context).accentColor),
-              onPressed: () {
-                searchBloc.search("");
-                _searchController.clear();
-                setState(() => state = SearchState.INACTIVE);
-                FocusScope.of(context).requestFocus(FocusNode());
-              },
-            )
-          ],
+              IconButton(
+                icon: Icon(Icons.backspace, color: Theme.of(context).accentColor),
+                onPressed: () {
+                  searchBloc.search("");
+                  _searchController.clear();
+                  setState(() => state = SearchState.INACTIVE);
+                  FocusScope.of(context).requestFocus(FocusNode());
+                },
+              )
+            ],
+          ),
         ),
+        body: _buildBody(context),
       ),
-      body: _buildBody(context),
     );
   }
 
@@ -78,32 +95,42 @@ class _SearchPageState extends State<SearchPage> {
       stream: searchBloc.currentResults,
       // initialData: currentState.articles,
       builder: (BuildContext context, AsyncSnapshot<List<ArticleModel>> resultsSnapshot) => resultsSnapshot.hasData && state != SearchState.INACTIVE
-          ? ListView.separated(
-              // shrinkWrap: true,
-              itemBuilder: (BuildContext context, int index) =>
-                  ArticleListElementCollapsed(article: resultsSnapshot.data.elementAt(index), preferences: currentState.preferences),
-              separatorBuilder: (BuildContext context, int index) => Divider(),
-              itemCount: resultsSnapshot.data.length,
+          ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: ListView.separated(
+                // shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) =>
+                    ArticleListElementCollapsed(article: resultsSnapshot.data.elementAt(index), preferences: currentState.preferences),
+                separatorBuilder: (BuildContext context, int index) => Divider(),
+                itemCount: resultsSnapshot.data.length,
+              ),
             )
           : state == SearchState.INACTIVE
               ? ListView(
                   children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 4.0),
-                      child: AspectRatio(
-                        aspectRatio: 7 / 5,
-                        child: CarouselSlider(
-                          options: CarouselOptions(
-                            autoPlay: true,
-                            aspectRatio: 7 / 5,
-                            viewportFraction: 1.0,
-                          ),
-                          items: currentState.articles.reversed
-                              .map((ArticleModel article) => ArticleSliderElement(article: article, preferences: currentState.preferences))
-                              .toList(),
-                        ),
-                      ),
-                    ),
+                    currentState.full
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 16.0, left: 16.0, right: 16.0, bottom: 4.0),
+                            child: AspectRatio(
+                              aspectRatio: 7 / 5,
+                              child: CarouselSlider(
+                                options: CarouselOptions(
+                                  autoPlay: true,
+                                  aspectRatio: 7 / 5,
+                                  viewportFraction: 1.0,
+                                ),
+                                items: currentState.articles
+                                    .where((ArticleModel article) => article.featuredMediaUrl != null)
+                                    .toList()
+                                    .reversed
+                                    .map((ArticleModel article) {
+                                  debugPrint("Analizzo articolo.");
+                                  return ArticleSliderElement(article: article, preferences: currentState.preferences);
+                                }).toList(),
+                              ),
+                            ),
+                          )
+                        : Container(),
                     StreamBuilder<List<CategoryModel>>(
                       stream: categoriesBloc.allCategories,
                       builder: (BuildContext context, AsyncSnapshot<List<CategoryModel>> categoriesSnapshot) {

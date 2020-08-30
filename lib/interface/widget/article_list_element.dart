@@ -1,11 +1,13 @@
 import 'package:app/generated/i18n.dart';
 import 'package:app/interface/screen/article_detail_screen.dart';
 import 'package:app/models/article_model.dart';
+import 'package:app/models/category_model.dart';
 import 'package:app/models/preferences_model.dart';
 import 'package:app/resources/utility/preferences_helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ArticleListElement extends StatelessWidget {
   final ArticleModel article;
@@ -22,6 +24,30 @@ class ArticleListElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> waitingShimmer = List<Widget>();
+
+    Color baseColor, highlightColor;
+
+    switch (Theme.of(context).brightness) {
+      case Brightness.dark:
+        baseColor = Theme.of(context).highlightColor;
+        highlightColor = Theme.of(context).canvasColor;
+        break;
+      case Brightness.light:
+        baseColor = Colors.grey;
+        highlightColor = Colors.white;
+        break;
+    }
+
+    for (int index = 0; index < 3; index++)
+      waitingShimmer.add(
+        Shimmer.fromColors(
+          baseColor: baseColor,
+          highlightColor: highlightColor,
+          child: Chip(label: Text("Caricamento...")),
+        ),
+      );
+
     return InkWell(
       child: Column(
         children: <Widget>[
@@ -31,20 +57,24 @@ class ArticleListElement extends StatelessWidget {
                 alignment: AlignmentDirectional.topEnd,
                 child: preferences.savedPosts.contains(article.id)
                     ? Padding(
-                        padding: EdgeInsets.only(top: 16.0),
-                        child: Icon(Icons.bookmark, color: Colors.redAccent),
-                      )
+                  padding: EdgeInsets.only(top: 16.0),
+                  child: Icon(Icons.bookmark, color: Colors.redAccent),
+                )
                     : Container(),
               ),
-              ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: article.categories.length,
-                  // scrollDirection: Axis.horizontal,
-                  itemBuilder: (BuildContext context, int index) => Chip(
-                        label: Text(article.categories.elementAt(index).name),
-                        backgroundColor: Theme.of(context).primaryColor,
-                      )),
+              Align(
+                alignment: AlignmentDirectional.center,
+                child: Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 16.0,
+                  children: article.categories == null
+                      ? waitingShimmer
+                      : article.categories.map((CategoryModel category) {
+                    if (article.categories.indexOf(category) < 3) return Chip(label: Text(category.name));
+                    return Container();
+                  }).toList(),
+                ),
+              ),
             ],
           ),
           Text(article.title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline5),
@@ -52,26 +82,26 @@ class ArticleListElement extends StatelessWidget {
           article.featuredMediaUrl == null || !showImage
               ? Container()
               : Column(
-                  children: <Widget>[
-                    AspectRatio(
-                      aspectRatio: 7 / 5,
-                      child: CachedNetworkImage(
-                        imageUrl: article.featuredMediaUrl,
-                        fit: BoxFit.cover,
-                        placeholder: (BuildContext context, String imageUrl) => Center(child: CircularProgressIndicator()),
-                      ),
-                    ),
-                    article.featuredMediaCaption.isEmpty
-                        ? Container()
-                        : Align(
-                            alignment: AlignmentDirectional.centerEnd,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: 4.0, top: 4.0),
-                              child: Text(article.featuredMediaCaption, style: Theme.of(context).textTheme.caption),
-                            ),
-                          ),
-                  ],
+            children: <Widget>[
+              AspectRatio(
+                aspectRatio: 7 / 5,
+                child: CachedNetworkImage(
+                  imageUrl: article.featuredMediaUrl,
+                  fit: BoxFit.cover,
+                  placeholder: (BuildContext context, String imageUrl) => Center(child: CircularProgressIndicator()),
                 ),
+              ),
+              article.featuredMediaCaption.isEmpty
+                  ? Container()
+                  : Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 4.0, top: 4.0),
+                  child: Text(article.featuredMediaCaption, style: Theme.of(context).textTheme.caption),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
       onTap: () =>
