@@ -1,6 +1,6 @@
 import 'package:app/assets.dart';
 import 'package:app/bloc/settings_bloc.dart';
-import 'package:app/generated/i18n.dart';
+import 'package:app/generated/l10n.dart';
 import 'package:app/interface/widget/article_list_element.dart';
 import 'package:app/models/currentstate_model.dart';
 import 'package:app/resources/utility/language_helper.dart';

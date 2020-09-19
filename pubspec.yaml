@@ -65,3 +65,5 @@ flutter_icons:
   image_path_ios: "assets/ic_launcher.jpg"
   android: true
   ios: true
+flutter_intl:
+  enabled: true

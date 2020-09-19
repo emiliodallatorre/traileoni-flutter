@@ -1,4 +1,4 @@
-import 'package:app/generated/i18n.dart';
+import 'package:app/generated/l10n.dart';
 import 'package:app/interface/screen/article_detail_screen.dart';
 import 'package:app/models/article_model.dart';
 import 'package:app/models/preferences_model.dart';

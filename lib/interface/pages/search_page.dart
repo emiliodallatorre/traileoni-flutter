@@ -1,7 +1,7 @@
 import 'package:app/bloc/categories_bloc.dart';
 import 'package:app/bloc/currentstate_bloc.dart';
 import 'package:app/bloc/search_bloc.dart';
-import 'package:app/generated/i18n.dart';
+import 'package:app/generated/l10n.dart';
 import 'package:app/interface/widget/article_list_element_collapsed.dart';
 import 'package:app/interface/widget/article_slider_element.dart';
 import 'package:app/interface/widget/category_list_element.dart';

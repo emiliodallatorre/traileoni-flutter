@@ -6,7 +6,6 @@ import 'package:html/parser.dart';
 class ArticleModel {
   final int id;
   final String title;
-  String author;
   final String excerpt;
   final String featuredMediaUrl;
   final String featuredMediaCaption;
@@ -19,7 +18,6 @@ class ArticleModel {
   ArticleModel({
     this.id,
     this.title,
-    this.author,
     this.excerpt,
     this.featuredMediaUrl,
     this.featuredMediaCaption,

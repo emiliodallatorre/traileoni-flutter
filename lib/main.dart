@@ -1,5 +1,5 @@
 import 'package:app/bloc/settings_bloc.dart';
-import 'package:app/generated/i18n.dart';
+import 'package:app/generated/l10n.dart';
 import 'package:app/interface/screen/article_detail_screen.dart';
 import 'package:app/interface/screen/category_screen.dart';
 import 'package:app/interface/screen/home_screen.dart';

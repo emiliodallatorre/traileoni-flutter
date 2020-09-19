@@ -1,4 +1,4 @@
-import 'package:app/generated/i18n.dart';
+import 'package:app/generated/l10n.dart';
 import 'package:app/interface/widget/article_list_element_collapsed.dart';
 import 'package:app/models/currentstate_model.dart';
 import 'package:flutter/material.dart';
