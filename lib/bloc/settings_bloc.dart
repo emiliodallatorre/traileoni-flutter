@@ -40,7 +40,6 @@ class SettingsBloc {
     String currentLocaleIso =
         "${settingsBloc.latestSettingsModel.locale.languageCode}${settingsBloc.latestSettingsModel.locale.countryCode?.isEmpty ?? true ? "" : "_${settingsBloc.latestSettingsModel.locale.countryCode}"}";
 
-    debugPrint(currentLocaleIso + "*");
     return currentLocaleIso;
   }
 
