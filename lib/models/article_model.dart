@@ -12,7 +12,6 @@ class ArticleModel {
   final String htmlBody, plainBody;
   final List<CategoryModel> categories;
   final String link;
-  final List<AuthorModel> authorsRefs;
   List<AuthorModel> authors;
 
   ArticleModel({
@@ -25,7 +24,6 @@ class ArticleModel {
     this.plainBody,
     this.categories,
     this.link,
-    this.authorsRefs,
     this.authors,
   });
 
@@ -39,6 +37,6 @@ class ArticleModel {
         categories: wordpressPost.categories != null ? wordpressPost.categories.map((rawCategory) => CategoryModel.fromWordpressCategory(rawCategory)).toList() : null,
         link: wordpressPost.link,
         id: wordpressPost.id,
-        authorsRefs: (wordpressPost.rawJson["_links"]["authors"] as List<dynamic>).map<AuthorModel>((e) => AuthorModel.fromRef(e)).toList(),
+        authors: (wordpressPost.rawJson["_links"]["authors"] as List<dynamic>).map<AuthorModel>((e) => AuthorModel.fromRef(e)).toList(),
       );
 }

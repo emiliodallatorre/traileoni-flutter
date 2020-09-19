@@ -78,8 +78,21 @@ class ArticleListElement extends StatelessWidget {
             ],
           ),
           Text(article.title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.headline5),
+          Builder(
+            builder: (BuildContext context) {
+              if (article.authors != null) if (article.authors.isNotEmpty) if (article.authors.first.name != null) if (article.authors.first.name.isNotEmpty)
+                return Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                    child: Text(S.current.by + article.authors.first.displayName, style: Theme.of(context).textTheme.bodyText1),
+                  ),
+                );
+
+              return Container();
+            },
+          ),
           Text(article.excerpt),
-          article.author?.isEmpty ?? true ? Container() : Text(article.author),
           article.featuredMediaUrl == null || !showImage
               ? Container()
               : Column(
@@ -105,8 +118,7 @@ class ArticleListElement extends StatelessWidget {
                 ),
         ],
       ),
-      onTap: () =>
-          Navigator.of(context).pushNamed(ArticleDetailScreen.route, arguments: ArticleDetailScreenRequest(article: article, preferences: preferences)),
+      onTap: () => Navigator.of(context).pushNamed(ArticleDetailScreen.route, arguments: ArticleDetailScreenRequest(article: article, preferences: preferences)),
       onLongPress: () => showModalBottomSheet(
         context: context,
         builder: (BuildContext context) => BottomSheet(

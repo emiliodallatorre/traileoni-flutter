@@ -1,3 +1,4 @@
+import 'package:app/generated/l10n.dart';
 import 'package:app/models/article_model.dart';
 import 'package:app/models/preferences_model.dart';
 import 'package:app/resources/utility/preferences_helper.dart';
@@ -70,6 +71,20 @@ class _ArticleDetailScreenState extends State<ArticleDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(_request.article.title, style: Theme.of(context).textTheme.headline5),
+              Builder(
+                builder: (BuildContext context) {
+                  if (_request.article.authors != null) if (_request.article.authors.isNotEmpty) if (_request.article.authors.first.name != null) if (_request.article.authors.first.name.isNotEmpty)
+                    return Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                        child: Text(S.current.by + _request.article.authors.first.displayName, style: Theme.of(context).textTheme.bodyText1),
+                      ),
+                    );
+
+                  return Container();
+                },
+              ),
               Divider(),
               Html(data: _request.article.htmlBody),
             ],

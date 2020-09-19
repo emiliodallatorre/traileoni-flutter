@@ -32,7 +32,7 @@ class ArticlesProvider {
     for (int index = 0; index < rawArticles.length; index++) {
       ArticleModel articleModel = ArticleModel.fromWordpressPost(rawArticles.elementAt(index));
 
-      if (full) articleModel.authors = await _fetchFullAuthors(articleModel.authorsRefs);
+      if (full) articleModel.authors = await _fetchFullAuthors(articleModel.authors);
 
       articles.add(articleModel);
     }
@@ -55,7 +55,7 @@ class ArticlesProvider {
     for (int index = 0; index < rawArticles.length; index++) {
       ArticleModel articleModel = ArticleModel.fromWordpressPost(rawArticles.elementAt(index));
 
-      articleModel.authors = await _fetchFullAuthors(articleModel.authorsRefs);
+      articleModel.authors = await _fetchFullAuthors(articleModel.authors);
 
       articles.add(articleModel);
     }
@@ -84,7 +84,7 @@ class ArticlesProvider {
     for (int index = 0; index < rawArticles.length; index++) {
       ArticleModel articleModel = ArticleModel.fromWordpressPost(rawArticles.elementAt(index));
 
-      articleModel.authors = await _fetchFullAuthors(articleModel.authorsRefs);
+      articleModel.authors = await _fetchFullAuthors(articleModel.authors);
 
       articles.add(articleModel);
     }
