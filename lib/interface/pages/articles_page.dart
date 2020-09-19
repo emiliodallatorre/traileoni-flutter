@@ -67,15 +67,14 @@ class ArticlesPage extends StatelessWidget {
                   title: Text(S.of(context).darkTheme),
                   value: (settingsBloc.latestSettingsModel.themeMode == ThemeMode.dark),
                   activeColor: Theme.of(context).accentColor,
-                  onChanged: (settingsBloc.latestSettingsModel.themeMode == ThemeMode.system)
-                      ? null
-                      : (bool dark) => settingsBloc.updateTheme(dark ? ThemeMode.dark : ThemeMode.light),
+                  onChanged:
+                      (settingsBloc.latestSettingsModel.themeMode == ThemeMode.system) ? null : (bool dark) => settingsBloc.updateTheme(dark ? ThemeMode.dark : ThemeMode.light),
                 ),
                 CheckboxListTile(
                   title: Text(S.of(context).systemTheme),
                   value: (settingsBloc.latestSettingsModel.themeMode == ThemeMode.system),
-                  onChanged: (bool system) => settingsBloc
-                      .updateTheme(system ? ThemeMode.system : ((Theme.of(context).brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light))),
+                  onChanged: (bool system) =>
+                      settingsBloc.updateTheme(system ? ThemeMode.system : ((Theme.of(context).brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light))),
                 ),
                 Divider(),
                 Padding(
@@ -100,16 +99,16 @@ class ArticlesPage extends StatelessWidget {
   }
 
   Widget _buildLanguageDropdown(BuildContext context) {
+
     return Padding(
       padding: EdgeInsets.all(16.0),
       child: Container(
         width: double.infinity,
         child: LanguagePickerDropdown(
           languagesList: S.delegate.supportedLocales
-              .map((e) =>
-                  {"name": LanguageHelper.getLanguageName(e.languageCode), "isoCode": "${e.languageCode}${e.countryCode == "" ? "" : "_${e.countryCode}"}"})
+              .map((e) => {"name": LanguageHelper.getLanguageName(e.languageCode), "isoCode": "${e.languageCode}${e.countryCode == null ? "" : "_${e.countryCode}"}"})
               .toList(),
-          initialValue: settingsBloc.currentLocaleIso(),
+          initialValue: settingsBloc.getCurrentLocaleIso(),
           itemBuilder: (Language language) => Text(language.name, style: Theme.of(context).textTheme.button),
           onValuePicked: (Language language) => settingsBloc.updateLocale(Locale.fromSubtags(languageCode: language.isoCode)),
         ),

@@ -1,6 +1,7 @@
 import 'package:app/models/settings_model.dart';
 import 'package:app/resources/utility/preferences_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:language_pickers/languages.dart';
 import 'package:rxdart/rxdart.dart';
 
 class SettingsBloc {
@@ -35,10 +36,11 @@ class SettingsBloc {
     }
   }
 
-  String currentLocaleIso() {
+  String getCurrentLocaleIso() {
     String currentLocaleIso =
-        "${settingsBloc.latestSettingsModel.locale.languageCode}${settingsBloc.latestSettingsModel.locale.countryCode == null ? "" : "_${settingsBloc.latestSettingsModel.locale.countryCode}"}";
+        "${settingsBloc.latestSettingsModel.locale.languageCode}${settingsBloc.latestSettingsModel.locale.countryCode?.isEmpty ?? true ? "" : "_${settingsBloc.latestSettingsModel.locale.countryCode}"}";
 
+    debugPrint(currentLocaleIso + "*");
     return currentLocaleIso;
   }
 
